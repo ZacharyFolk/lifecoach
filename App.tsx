@@ -2,25 +2,62 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
   View,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
+type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  ForgotPassword: undefined;
+};
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Login'
+>;
 
-function AppInput({value, placeholder, onChange, ...rest}: any): JSX.Element {
-  return (
-    <TextInput
-      value={value}
-      placeholder={placeholder}
-      onChange={onChange}
-      style={styles.inputs}
-      {...rest}
-    />
-  );
+type LoginProps = {
+  navigation: LoginScreenNavigationProp;
+};
+
+type RegisterScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Register'
+>;
+
+type RegisterProps = {
+  navigation: RegisterScreenNavigationProp;
+};
+
+type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'ForgotPassword'
+>;
+
+type ForgotPasswordProps = {
+  navigation: ForgotPasswordScreenNavigationProp;
+};
+
+type FormNavigationProps = {
+  leftLink: string;
+  rightLink: string;
+  onLeftPress: () => void;
+  onRightPress: () => void;
+};
+
+type AppInputProps = {
+  value: string;
+  placeholder: string;
+};
+
+function AppInput({value, placeholder, ...rest}: AppInputProps): JSX.Element {
+  return <TextInput value={value} placeholder={placeholder} {...rest} />;
 }
 
 function AppLink({text, onPress}: {text: string; onPress: () => void}) {
@@ -34,7 +71,12 @@ function AppLink({text, onPress}: {text: string; onPress: () => void}) {
 function FormContainer({children}: PropsWithChildren<{}>): JSX.Element {
   return <View>{children}</View>;
 }
-function FormNavigation({leftLink, rightLink, onLeftPress, onRightPress}: any) {
+function FormNavigation({
+  leftLink,
+  rightLink,
+  onLeftPress,
+  onRightPress,
+}: FormNavigationProps) {
   return (
     <View>
       <AppLink text={leftLink} onPress={onLeftPress} />
@@ -46,18 +88,16 @@ function FormNavigation({leftLink, rightLink, onLeftPress, onRightPress}: any) {
 function SubmitButton({title}: {title: string}): JSX.Element {
   return (
     <TouchableHighlight activeOpacity={0.7} underlayColor="#30aaff">
-      <View>
-        <Text>{title}</Text>
-      </View>
+      <Text>{title}</Text>
     </TouchableHighlight>
   );
 }
 
-function Login({navigation}): JSX.Element {
+function Login({navigation}: LoginProps): JSX.Element {
   return (
     <FormContainer>
-      <AppInput placeholder="Username" />
-      <AppInput placeholder="Password" />
+      <AppInput placeholder="Username" value="" />
+      <AppInput placeholder="Password" value="" />
       <SubmitButton title="Login" />
       <FormNavigation
         leftLink="Register"
@@ -69,13 +109,13 @@ function Login({navigation}): JSX.Element {
   );
 }
 
-function Register({navigation}): JSX.Element {
+function Register({navigation}: RegisterProps): JSX.Element {
   return (
     <FormContainer>
-      <AppInput placeholder="Username" />
-      <AppInput placeholder="Email" />
-      <AppInput placeholder="Password" />
-      <AppInput placeholder="Confirm Password" />
+      <AppInput placeholder="Username" value="" />
+      <AppInput placeholder="Email" value="" />
+      <AppInput placeholder="Password" value="" />
+      <AppInput placeholder="Confirm Password" value="" />
       <SubmitButton title="Register" />
       <FormNavigation
         leftLink="Login"
@@ -86,10 +126,10 @@ function Register({navigation}): JSX.Element {
     </FormContainer>
   );
 }
-function ForgotPassword({navigation}): JSX.Element {
+function ForgotPassword({navigation}: ForgotPasswordProps): JSX.Element {
   return (
     <FormContainer>
-      <AppInput placeholder="Email" />
+      <AppInput placeholder="Email" value="" />
       <SubmitButton title="Refresh Password" />
       <FormNavigation
         leftLink="Login"
@@ -116,27 +156,5 @@ function App(): JSX.Element {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  inputs: {
-    borderBottomColor: '#000000',
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
