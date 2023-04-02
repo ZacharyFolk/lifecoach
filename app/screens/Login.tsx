@@ -12,23 +12,19 @@ import {
   Center,
   useColorMode,
   useColorModeValue,
+  Icon,
 } from 'native-base';
 
-import AppInput from '../components/AppInput';
-import FormContainer from '../components/FormContainer';
-import FormNavigation from '../components/FormNavigation';
-import SubmitButton from '../components/SubmitButton';
-
 import AuthLayout from '../components/AuthLayout';
+import AuthInput from '../components/AuthInput';
+
 function Login({navigation}: any): JSX.Element {
-  const {toggleColorMode} = useColorMode();
-  const text = useColorModeValue('Light', 'Dark');
-  const bg = useColorModeValue('warmGray.50', 'coolGray.800');
+  const [email, setEmail] = React.useState('');
 
   const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
-  const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState('');
+
   // Create validation function to check if email is valid
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -36,6 +32,7 @@ function Login({navigation}: any): JSX.Element {
 
   const handleEmailBlur = () => {
     if (!validateEmail(email)) {
+      console.log('INVALID EMAIL');
       setEmailError('Email is invalid');
     } else {
       setEmailError('');
@@ -59,38 +56,30 @@ function Login({navigation}: any): JSX.Element {
   };
   return (
     <AuthLayout title="Welcome" subtitle="Sign in to continue!">
-      <FormControl isRequired isInvalid={!!emailError}>
-        <FormControl.Label>Email</FormControl.Label>
-        <Input
-          value={email}
-          placeholder="example@domain.com"
-          onBlur={handleEmailBlur}
-          onChangeText={value => setEmail(value)}
-        />
-        <FormControl.ErrorMessage>{emailError}</FormControl.ErrorMessage>
-      </FormControl>
+      <AuthInput
+        label="Email"
+        value={email}
+        onBlur={handleEmailBlur}
+        onChangeText={value => setEmail(value)}
+        isInvalid={Boolean(emailError)}
+        errorMessage={emailError}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
 
-      <FormControl isRequired isInvalid={!!passwordError}>
-        <FormControl.Label>Password</FormControl.Label>
-        <Input
-          value={password}
-          placeholder="********"
-          onBlur={handlePasswordBlur}
-          onChangeText={value => setPassword(value)}
-        />
-        <FormControl.ErrorMessage>{passwordError}</FormControl.ErrorMessage>
-        <Link
-          onPress={() => navigation.navigate('ForgotPassword')}
-          _text={{
-            fontSize: 'xs',
-            fontWeight: '500',
-            color: 'indigo.500',
-          }}
-          alignSelf="flex-end"
-          mt="1">
-          Forget Password?
-        </Link>
-      </FormControl>
+      <AuthInput
+        label="Password"
+        value={password}
+        onBlur={handlePasswordBlur}
+        placeholder="Enter your password"
+        type="password"
+        onChangeText={value => setPassword(value)}
+        isInvalid={Boolean(passwordError)}
+        errorMessage={passwordError}
+        keyboardType="default"
+        autoCapitalize="none"
+      />
+
       <Button mt="2" colorScheme="indigo">
         Sign in
       </Button>
