@@ -1,23 +1,8 @@
 import React from 'react';
-import {
-  Box,
-  Text,
-  Heading,
-  VStack,
-  FormControl,
-  Input,
-  Link,
-  Button,
-  HStack,
-  Center,
-  useColorMode,
-  useColorModeValue,
-  Icon,
-} from 'native-base';
-
+import {Text, Link, Button, HStack} from 'native-base';
 import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
-
+import AuthLinks from '../components/AuthLinks';
 function Login({navigation}: any): JSX.Element {
   const [email, setEmail] = React.useState('');
 
@@ -26,8 +11,8 @@ function Login({navigation}: any): JSX.Element {
   const [emailError, setEmailError] = React.useState('');
 
   // Create validation function to check if email is valid
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateEmail = (emailValue: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
   };
 
   const handleEmailBlur = () => {
@@ -40,8 +25,8 @@ function Login({navigation}: any): JSX.Element {
   };
 
   // Create validation function to check if password is minimum 8 characters and maximum 20 characters
-  const validatePassword = (password: string) => {
-    if (password.length < 8 || password.length > 20) {
+  const validatePassword = (passwordValue: string) => {
+    if (passwordValue.length < 8 || passwordValue.length > 20) {
       return false;
     }
     return true;
@@ -85,25 +70,13 @@ function Login({navigation}: any): JSX.Element {
       <Button mt="2" colorScheme="indigo">
         Sign in
       </Button>
-      <HStack mt="6" justifyContent="center">
-        <Text
-          fontSize="sm"
-          color="coolGray.600"
-          _dark={{
-            color: 'warmGray.200',
-          }}>
-          I'm a new user.
-        </Text>
-        <Link
-          onPress={() => navigation.navigate('Register')}
-          _text={{
-            color: 'indigo.500',
-            fontWeight: 'medium',
-            fontSize: 'sm',
-          }}>
-          Sign Up
-        </Link>
-      </HStack>
+
+      <AuthLinks
+        navigation={navigation}
+        message="Are you a new user?"
+        linktext="Sign Up"
+        linkpath="Register"
+      />
     </AuthLayout>
   );
 }

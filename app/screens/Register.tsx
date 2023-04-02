@@ -1,12 +1,8 @@
 import React from 'react';
-import AppInput from '../components/AppInput';
-import FormContainer from '../components/FormContainer';
-import FormNavigation from '../components/FormNavigation';
-import SubmitButton from '../components/SubmitButton';
 import AuthLayout from '../components/AuthLayout';
+import AuthInput from '../components/AuthInput';
+
 import {
-  Box,
-  Text,
   Heading,
   VStack,
   FormControl,
@@ -18,6 +14,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from 'native-base';
+import AuthLinks from '../components/AuthLinks';
 function Register({navigation}: any): JSX.Element {
   const [username, setUsername] = React.useState('');
   const [usernameError, setUsernameError] = React.useState('');
@@ -31,7 +28,7 @@ function Register({navigation}: any): JSX.Element {
   };
   // validation that checks is not empty
   const validateUsername = (username: string) => {
-    if (username.length < 1) {
+    if (username.length < 3 || username.length > 20) {
       return false;
     }
     return true;
@@ -39,7 +36,7 @@ function Register({navigation}: any): JSX.Element {
 
   const handleUsernameBlur = () => {
     if (!validateUsername(username)) {
-      setUsernameError('Username is invalid');
+      setUsernameError('Username must be between 3 and 20 characters');
     } else {
       setUsernameError('');
     }
@@ -47,7 +44,7 @@ function Register({navigation}: any): JSX.Element {
 
   const handleEmailBlur = () => {
     if (!validateEmail(email)) {
-      setEmailError('Email is invalid');
+      setEmailError('Use email format like name@domain.com');
     } else {
       setEmailError('');
     }
@@ -71,40 +68,50 @@ function Register({navigation}: any): JSX.Element {
 
   return (
     <AuthLayout title="Sign Up" subtitle="Create a new acccount!">
-      <FormControl isRequired isInvalid={!!usernameError}>
-        <FormControl.Label>Username</FormControl.Label>
-        <Input
-          value={username}
-          placeholder="Blargh"
-          onBlur={handleUsernameBlur}
-          onChangeText={value => setUsername(value)}
-        />
-        <FormControl.ErrorMessage>{usernameError}</FormControl.ErrorMessage>
-      </FormControl>
+      <AuthInput
+        label="Username"
+        value={username}
+        onBlur={handleUsernameBlur}
+        onChangeText={value => setUsername(value)}
+        isInvalid={Boolean(usernameError)}
+        errorMessage={usernameError}
+        autoCapitalize="none"
+      />
 
-      <FormControl isRequired isInvalid={!!emailError}>
-        <FormControl.Label>Email</FormControl.Label>
-        <Input
-          value={email}
-          placeholder="example@domain.com"
-          onBlur={handleEmailBlur}
-          onChangeText={value => setEmail(value)}
-        />
-        <FormControl.ErrorMessage>{emailError}</FormControl.ErrorMessage>
-      </FormControl>
-      <FormControl isRequired isInvalid={!!passwordError}>
-        <FormControl.Label>Password</FormControl.Label>
-        <Input
-          value={password}
-          placeholder="********"
-          onBlur={handlePasswordBlur}
-          onChangeText={value => setPassword(value)}
-        />
-        <FormControl.ErrorMessage>{passwordError}</FormControl.ErrorMessage>
-      </FormControl>
+      <AuthInput
+        label="Email"
+        value={email}
+        onBlur={handleEmailBlur}
+        onChangeText={value => setEmail(value)}
+        isInvalid={Boolean(emailError)}
+        errorMessage={emailError}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
+
+      <AuthInput
+        label="Password"
+        value={password}
+        onBlur={handlePasswordBlur}
+        placeholder="Enter your password"
+        type="password"
+        onChangeText={value => setPassword(value)}
+        isInvalid={Boolean(passwordError)}
+        errorMessage={passwordError}
+        keyboardType="default"
+        autoCapitalize="none"
+        navigation={navigation}
+      />
+
       <Button mt="2" colorScheme="indigo">
-        Sign in
+        Sign up
       </Button>
+      <AuthLinks
+        navigation={navigation}
+        message="Already have an account?"
+        linktext="Log In"
+        linkpath="Login"
+      />
     </AuthLayout>
   );
 }

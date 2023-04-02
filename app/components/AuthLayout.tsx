@@ -47,9 +47,11 @@ function AuthLayout({children, title, subtitle}) {
               <VStack space={3} mt="5">
                 {children}
               </VStack>
+              {/*
+
               <Button onPress={toggleColorMode} h={10}>
                 Toggle
-              </Button>
+              </Button> */}
             </Box>
           </Center>
         </Box>
