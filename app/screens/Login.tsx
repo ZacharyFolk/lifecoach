@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Link, Button, HStack} from 'native-base';
+import {Button} from 'native-base';
 import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
 import AuthLinks from '../components/AuthLinks';

@@ -87,15 +87,3 @@ const styles = StyleSheet.create({
   },
 });
 export default AuthInput;
-
-//   const [showPassword, setShowPassword] = useState(false);
-
-//   secureTextEntry={type === 'password' && !showPassword}
-
-//....
-// {type === 'password' && (
-//     <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-//       <Icon as={Ionicons} name={showPassword ? 'eye-off' : 'eye'} />{' '}
-//       {/* Use as prop to specify Ionicons library */}
-//     </TouchableOpacity>
-//   )}

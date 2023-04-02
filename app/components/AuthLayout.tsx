@@ -1,24 +1,13 @@
 import React from 'react';
-import {
-  Box,
-  Text,
-  Heading,
-  VStack,
-  FormControl,
-  Input,
-  Link,
-  Button,
-  HStack,
-  Center,
-  useColorMode,
-  useColorModeValue,
-} from 'native-base';
+import {Box, Heading, VStack, Center, useColorModeValue} from 'native-base';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
-
-function AuthLayout({children, title, subtitle}) {
-  const {toggleColorMode} = useColorMode();
+interface AuthLayoutProps {
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+}
+function AuthLayout({children, title, subtitle}: AuthLayoutProps) {
   const bg = useColorModeValue('warmGray.50', 'coolGray.800');
-
   return (
     <KeyboardAvoidingView>
       <ScrollView>

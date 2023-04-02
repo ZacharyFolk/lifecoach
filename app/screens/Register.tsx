@@ -2,18 +2,7 @@ import React from 'react';
 import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
 
-import {
-  Heading,
-  VStack,
-  FormControl,
-  Input,
-  Link,
-  Button,
-  HStack,
-  Center,
-  useColorMode,
-  useColorModeValue,
-} from 'native-base';
+import {Button} from 'native-base';
 import AuthLinks from '../components/AuthLinks';
 function Register({navigation}: any): JSX.Element {
   const [username, setUsername] = React.useState('');
@@ -23,12 +12,12 @@ function Register({navigation}: any): JSX.Element {
   const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
 
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateEmail = (emailValue: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
   };
   // validation that checks is not empty
-  const validateUsername = (username: string) => {
-    if (username.length < 3 || username.length > 20) {
+  const validateUsername = (usernameValue: string) => {
+    if (usernameValue.length < 3 || usernameValue.length > 20) {
       return false;
     }
     return true;
@@ -51,8 +40,8 @@ function Register({navigation}: any): JSX.Element {
   };
 
   // Create validation function to check if password is minimum 8 characters and maximum 20 characters
-  const validatePassword = (password: string) => {
-    if (password.length < 8 || password.length > 20) {
+  const validatePassword = (passwordValue: string) => {
+    if (passwordValue.length < 8 || passwordValue.length > 20) {
       return false;
     }
     return true;
