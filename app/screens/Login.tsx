@@ -78,6 +78,8 @@ function Login({navigation}: any): JSX.Element {
         errorMessage={passwordError}
         keyboardType="default"
         autoCapitalize="none"
+        navigation={navigation}
+        loginHelper={true}
       />
 
       <Button mt="2" colorScheme="indigo">

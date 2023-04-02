@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import {FormControl, Input, IInputProps} from 'native-base';
+import {Link, FormControl, Input, IInputProps} from 'native-base';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {MaterialCommunityIcon} from '../components/VectorIcons';
 // IInputProps is an interface from native-base that inherits all the props from Input
@@ -19,6 +19,8 @@ interface AuthInputProps extends IInputProps {
   label: string;
   isInvalid?: boolean;
   errorMessage?: string;
+  navigation?: any;
+  loginHelper?: boolean;
 }
 
 const AuthInput: React.FC<AuthInputProps> = ({
@@ -47,7 +49,6 @@ const AuthInput: React.FC<AuthInputProps> = ({
         onChangeText={onChangeText}
         type={type}
         secureTextEntry={type === 'password' && !isPasswordVisible}
-        style={styles.input}
         {...rest}
       />
       {type === 'password' && (
@@ -61,6 +62,20 @@ const AuthInput: React.FC<AuthInputProps> = ({
         </TouchableOpacity>
       )}
       <FormControl.ErrorMessage>{errorMessage}</FormControl.ErrorMessage>
+
+      {rest.loginHelper && (
+        <Link
+          onPress={() => rest.navigation.navigate('ForgotPassword')}
+          _text={{
+            fontSize: 'xs',
+            fontWeight: '500',
+            color: 'indigo.500',
+          }}
+          alignSelf="flex-end"
+          mt="1">
+          Forget Password?
+        </Link>
+      )}
     </FormControl>
   );
 };
