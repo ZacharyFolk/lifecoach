@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
-
 import axios from 'axios';
 import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
-import {Button, Text} from 'native-base';
 import AuthLinks from '../components/AuthLinks';
+import SubmitButton from '../components/SubmitButton';
 function Register({navigation}: any): JSX.Element {
-  const [username, setUsername] = React.useState('');
   const [usernameError, setUsernameError] = useState('');
-  const [email, setEmail] = React.useState('');
+
   const [emailError, setEmailError] = React.useState('');
-  const [password, setPassword] = React.useState('');
+
   const [passwordError, setPasswordError] = React.useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
@@ -153,13 +151,12 @@ function Register({navigation}: any): JSX.Element {
         navigation={navigation}
       />
 
-      <Button
-        mt="2"
+      <SubmitButton
         onPress={handleSubmit}
-        disabled={isSubmitting}
-        colorScheme={buttonColor}>
-        <Text>{buttonText}</Text>
-      </Button>
+        isSubmitting={isSubmitting}
+        buttonText={buttonText}
+        buttonColor={buttonColor}
+      />
       <AuthLinks
         navigation={navigation}
         message="Already have an account?"
