@@ -4,166 +4,123 @@ import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
 import AuthLinks from '../components/AuthLinks';
 import SubmitButton from '../components/SubmitButton';
+import {useFormValidation} from '../util/useFormValidation';
+import AppNotification from '../components/AppNotification';
+import {updateNotification} from '../util/helpers';
 function Register({navigation}: any): JSX.Element {
-  const [usernameError, setUsernameError] = useState('');
-
-  const [emailError, setEmailError] = React.useState('');
-
-  const [passwordError, setPasswordError] = React.useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const [isSuccess, setIsSuccess] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const [buttonText, setButtonText] = React.useState('Sign up');
-  const [buttonColor, setButtonColor] = React.useState('indigo');
-  const defaultValues = {
+
+  const initialValues = {
     name: '',
     email: '',
     password: '',
   };
-  const [formValues, setFormValues] = useState(defaultValues);
-
-  useEffect(() => {
-    // if is submitting console log message
-    if (isSubmitting) {
-      setButtonText('Submitting...');
-      setButtonColor('gray');
-    } else {
-      setButtonText('Sign up');
-      setButtonColor('indigo');
-    }
-  }, [isSubmitting]);
-
-  const handleChangeText = (key: string, value: string) => {
-    setFormValues({...formValues, [key]: value});
-  };
-
-  // validations
-  const validateEmail = () => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email);
-  };
-  // validation that checks is not empty
-  const validateUsername = () => {
-    if (formValues.name.length < 3 || formValues.name.length > 20) {
-      return false;
-    }
-    return true;
-  };
-  const validatePassword = () => {
-    if (formValues.password.length < 8 || formValues.password.length > 20) {
-      return false;
-    }
-    return true;
-  };
-  // onblur events for validations
-  const handleUsernameBlur = () => {
-    if (!validateUsername()) {
-      setUsernameError('Username must be between 3 and 20 characters');
-    } else {
-      setUsernameError('');
-    }
-  };
-  const handleEmailBlur = () => {
-    if (!validateEmail()) {
-      setEmailError('Use email format like name@domain.com');
-    } else {
-      setEmailError('');
-    }
-  };
-  const handlePasswordBlur = () => {
-    if (!validatePassword()) {
-      setPasswordError('Password must be between 8 and 20 characters');
-    } else {
-      setPasswordError('');
-    }
-  };
+  const {formValues, errors, handleChangeText, handleBlur, clearForm} =
+    useFormValidation({
+      initialValues,
+    });
+  const [message, setMessage] = useState({
+    text: '',
+    type: '',
+  });
   // submit function
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    if (validateUsername() && validateEmail() && validatePassword()) {
-      setIsSuccess(true);
-      setIsError(false);
-      setIsSubmitted(true);
+    clearForm();
 
-      console.log(formValues);
-      axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-      axios.defaults.headers.post['Content-Type'] = 'application/json';
-      try {
-        console.log(formValues);
-        const response = await axios.post(
-          'http://10.0.2.2:8000/api/user/create', // for android emulator have to replace localhost with this
-          formValues,
-          {withCredentials: true},
-        );
-        console.log(response.data);
-        setFormValues(defaultValues);
-      } catch (error) {
-        console.log(error);
+    try {
+      const response = await axios.post(
+        'http://10.0.2.2:8000/api/user/create', // for android emulator have to replace localhost with this
+        formValues,
+        {
+          timeout: 5000, // Set a timeout of 5 seconds
+        },
+      );
+
+      console.log(response.data);
+      // eslint-disable-next-line no-lone-blocks
+      {
+        response.data.success &&
+          updateNotification(
+            setMessage,
+            'Great!  Now confirm your email.',
+            'success',
+          );
       }
-    }
-    if (!validateUsername() || !validateEmail() || !validatePassword()) {
-      setIsSuccess(false);
-      setIsError(true);
-      setIsSubmitted(true);
-      setErrorMessage('Please check your inputs');
+    } catch (error: any) {
+      if (error.response) {
+        setIsSubmitting(false);
+        return updateNotification(
+          setMessage,
+          error.response.data.error,
+          'error',
+        );
+      }
     }
 
     setTimeout(() => {
+      console.log('derp');
       setIsSubmitting(false);
-    }, 3000);
+      console.log('Submitted', setIsSubmitting);
+    }, 300);
   };
 
   return (
-    <AuthLayout title="Sign Up" subtitle="Create a new acccount!">
-      <AuthInput
-        label="Username"
-        value={formValues.name}
-        onBlur={handleUsernameBlur}
-        onChangeText={value => handleChangeText('name', value)}
-        isInvalid={Boolean(usernameError)}
-        errorMessage={usernameError}
-        autoCapitalize="none"
-      />
+    <>
+      {message.text && (
+        <AppNotification type={message.type} text={message.text} />
+      )}
 
-      <AuthInput
-        label="Email"
-        value={formValues.email}
-        onBlur={handleEmailBlur}
-        onChangeText={value => handleChangeText('email', value)}
-        isInvalid={Boolean(emailError)}
-        errorMessage={emailError}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+      <AuthLayout title="Sign Up" subtitle="Create a new acccount!">
+        <AuthInput
+          label="Username"
+          value={formValues.name}
+          onBlur={() => handleBlur('name')}
+          onChangeText={value => handleChangeText('name', value)}
+          isInvalid={Boolean(errors.email)}
+          errorMessage={errors.email}
+          autoCapitalize="none"
+        />
 
-      <AuthInput
-        label="Password"
-        value={formValues.password}
-        onBlur={handlePasswordBlur}
-        placeholder="Enter your password"
-        type="password"
-        onChangeText={value => handleChangeText('password', value)}
-        isInvalid={Boolean(passwordError)}
-        errorMessage={passwordError}
-        keyboardType="default"
-        autoCapitalize="none"
-        navigation={navigation}
-      />
+        <AuthInput
+          label="Email"
+          value={formValues.email}
+          onBlur={() => handleBlur('email')}
+          onChangeText={value => handleChangeText('email', value)}
+          isInvalid={Boolean(errors.email)}
+          errorMessage={errors.email}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-      <SubmitButton
-        onPress={handleSubmit}
-        isSubmitting={isSubmitting}
-        buttonText={buttonText}
-        buttonColor={buttonColor}
-      />
-      <AuthLinks
-        navigation={navigation}
-        message="Already have an account?"
-        linktext="Log In"
-        linkpath="Login"
-      />
-    </AuthLayout>
+        <AuthInput
+          label="Password"
+          value={formValues.password}
+          onBlur={() => handleBlur('password')}
+          placeholder="Enter your password"
+          type="password"
+          onChangeText={value => handleChangeText('password', value)}
+          isInvalid={Boolean(errors.password)}
+          errorMessage={errors.password}
+          keyboardType="default"
+          autoCapitalize="none"
+          navigation={navigation}
+          loginHelper={false}
+        />
+
+        <SubmitButton
+          onPress={handleSubmit}
+          isSubmitting={isSubmitting}
+          buttonText={'Sign up'}
+        />
+        <AuthLinks
+          navigation={navigation}
+          message="Already have an account?"
+          linktext="Log In"
+          linkpath="Login"
+        />
+      </AuthLayout>
+    </>
   );
 }
 export default Register;

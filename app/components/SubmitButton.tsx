@@ -4,20 +4,14 @@ interface Props {
   onPress: () => void;
   isSubmitting: boolean;
   buttonText: string;
-  buttonColor?: string;
 }
-const SubmitButton: React.FC<Props> = ({
-  onPress,
-  isSubmitting,
-  buttonText,
-  buttonColor,
-}) => (
+const SubmitButton: React.FC<Props> = ({onPress, isSubmitting, buttonText}) => (
   <Button
     mt={2}
     onPress={onPress}
     disabled={isSubmitting}
-    colorScheme={buttonColor}>
-    <Text>{buttonText}</Text>
+    colorScheme={isSubmitting ? 'trueGray' : 'indigo'}>
+    <Text>{isSubmitting ? 'Submitting...' : buttonText}</Text>
   </Button>
 );
 
